@@ -25,6 +25,10 @@ const liftEase = 0.12;
 let mouseX = null;
 let mouseY = null;
 let blocks = [];
+let parallaxX = 0;
+let parallaxY = 0;
+let targetParallaxX = 0;
+let targetParallaxY = 0;
 
 // -------------------------------
 // CANVAS RESIZE
@@ -145,6 +149,9 @@ function drawBlock(x, y, lift, baseIsoY) {
 function drawScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ctx.save();
+    ctx.translate(parallaxX, parallaxY);
+
     const offsetX = canvas.width / 2;
     const offsetY = canvas.height / 2;
 
@@ -154,9 +161,12 @@ function drawScene() {
         const screenYBase = iso.y + offsetY;
 
         // Proximity logic
+        // Use relative mouse position to account for parallax shift
         if (mouseX !== null && mouseY !== null) {
-            const dx = mouseX - screenX;
-            const dy = mouseY - screenYBase;
+            const relMouseX = mouseX - parallaxX;
+            const relMouseY = mouseY - parallaxY;
+            const dx = relMouseX - screenX;
+            const dy = relMouseY - screenYBase;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < influenceRadius) {
@@ -177,12 +187,16 @@ function drawScene() {
 
         drawBlock(screenX, drawY, block.currentLift, screenYBase);
     });
+
+    ctx.restore();
 }
 
 // -------------------------------
 // ANIMATION LOOP
 // -------------------------------
 function animate() {
+    parallaxX += (targetParallaxX - parallaxX) * 0.08;
+    parallaxY += (targetParallaxY - parallaxY) * 0.08;
     drawScene();
     requestAnimationFrame(animate);
 }
@@ -191,9 +205,15 @@ function animate() {
 // EVENTS
 // -------------------------------
 hero.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
+    const rect = hero.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
+
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+
+    targetParallaxX = nx * 80;
+    targetParallaxY = ny * 80;
 });
 
 hero.addEventListener('mouseleave', () => {

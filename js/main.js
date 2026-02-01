@@ -16,7 +16,8 @@ heroTl.from(
     {
         opacity: 0,
         y: 40,
-        stagger: 0.12
+        stagger: 0.12,
+        clearProps: "transform"
     }
 );
 
