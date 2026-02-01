@@ -44,3 +44,8 @@
 .nav-links a:hover {
     color: #ffffff;
 }
+
+main {
+    padding-top: 96px;
+    /* match header height */
+}
