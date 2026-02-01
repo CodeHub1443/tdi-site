@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDI — The Data Island</title>
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/hero.css">
+</head>
+
+<body>
+    <header id="site-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">TDI</a>
+            <nav class="nav-links">
+                <a href="#hero">Home</a>
+                <a href="#solutions">Solutions</a>
+                <a href="#services">Services</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-content">
+                <span class="hero-badge">THE DATA ISLAND</span>
+                <h1 class="hero-title">Transform Your Business with Us</h1>
+                <p class="hero-subtitle">Let us guide you through uncertainty with expertise and proven strategies.</p>
+                <a href="#" class="hero-cta">Explore</a>
+
+                <div class="hero-meta">
+                    <div class="hero-divider"></div>
+                    <div class="hero-categories">
+                        <span class="hero-category">New Gen AI</span>
+                        <span class="hero-category">Business Strategy</span>
+                        <span class="hero-category">Operational Efficiency</span>
+                        <span class="hero-category">Customer Satisfaction</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gen-ai" class="reveal-section"></section>
+        <section id="about" class="reveal-section"></section>
+    </main>
+
+    <footer></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="js/hero-canvas.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

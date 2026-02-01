@@ -1,0 +1,213 @@
+// ===============================
+// HERO CANVAS — ISOMETRIC GRID
+// ===============================
+
+const canvas = document.getElementById('hero-canvas');
+const hero = document.getElementById('hero');
+const ctx = canvas.getContext('2d');
+
+// -------------------------------
+// CONFIG
+// -------------------------------
+let tileWidth = 84;
+let tileHeight = 42;
+const gridCols = 56;
+const gridRows = 56;
+const blockHeight = 12;
+
+const influenceRadius = 160;
+const maxLift = 8;
+const liftEase = 0.12;
+
+// -------------------------------
+// STATE
+// -------------------------------
+let mouseX = null;
+let mouseY = null;
+let blocks = [];
+
+// -------------------------------
+// CANVAS RESIZE
+// -------------------------------
+function resizeCanvas() {
+    canvas.width = hero.clientWidth;
+    canvas.height = hero.clientHeight;
+}
+
+// -------------------------------
+// INIT GRID
+// -------------------------------
+function initGrid() {
+    blocks = [];
+    for (let x = -gridCols / 2; x < gridCols / 2; x++) {
+        for (let y = -gridRows / 2; y < gridRows / 2; y++) {
+            blocks.push({
+                gx: x,
+                gy: y,
+                currentLift: 0,
+                targetLift: 0
+            });
+        }
+    }
+}
+
+// -------------------------------
+// ISOMETRIC HELPERS
+// -------------------------------
+function isoProject(x, y) {
+    return {
+        x: (x - y) * tileWidth / 2,
+        y: (x + y) * tileHeight / 2
+    };
+}
+
+// -------------------------------
+// DRAW BLOCK (WITH UNDER-GLOW)
+// -------------------------------
+function drawBlock(x, y, lift, baseIsoY) {
+    // Depth attenuation (background illusion)
+    const depthFadeStart = canvas.height * 0.15;
+    const depthFadeEnd = canvas.height * 0.55;
+
+    let depthAlpha = 1;
+    if (y < depthFadeEnd) {
+        depthAlpha = Math.min(
+            1,
+            Math.max(0, (y - depthFadeStart) / (depthFadeEnd - depthFadeStart))
+        );
+    }
+
+    ctx.globalAlpha = depthAlpha;
+
+    // Under-glow
+    if (lift > 0.5) {
+        ctx.save();
+        ctx.shadowColor = 'rgba(30, 79, 255, 0.18)';
+        ctx.shadowBlur = lift * 3;
+        ctx.fillStyle = 'rgba(30, 79, 255, 0.18)';
+
+        const glowScale = 1.1;
+        const gW = (tileWidth / 2) * glowScale;
+        const gH = (tileHeight / 2) * glowScale;
+        const gCenterY = baseIsoY + tileHeight / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(x, gCenterY - gH);
+        ctx.lineTo(x + gW, gCenterY);
+        ctx.lineTo(x, gCenterY + gH);
+        ctx.lineTo(x - gW, gCenterY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Colors (subtle contrast)
+    const colorTop = '#0E1A2A';
+    const colorLeft = '#0A1422';
+    const colorRight = '#070F1A';
+
+    // Top face
+    ctx.fillStyle = colorTop;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + tileWidth / 2, y + tileHeight / 2);
+    ctx.lineTo(x, y + tileHeight);
+    ctx.lineTo(x - tileWidth / 2, y + tileHeight / 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Left face
+    ctx.fillStyle = colorLeft;
+    ctx.beginPath();
+    ctx.moveTo(x - tileWidth / 2, y + tileHeight / 2);
+    ctx.lineTo(x, y + tileHeight);
+    ctx.lineTo(x, y + tileHeight + blockHeight);
+    ctx.lineTo(x - tileWidth / 2, y + tileHeight / 2 + blockHeight);
+    ctx.closePath();
+    ctx.fill();
+
+    // Right face
+    ctx.fillStyle = colorRight;
+    ctx.beginPath();
+    ctx.moveTo(x, y + tileHeight);
+    ctx.lineTo(x + tileWidth / 2, y + tileHeight / 2);
+    ctx.lineTo(x + tileWidth / 2, y + tileHeight / 2 + blockHeight);
+    ctx.lineTo(x, y + tileHeight + blockHeight);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.globalAlpha = 1;
+}
+
+// -------------------------------
+// DRAW SCENE
+// -------------------------------
+function drawScene() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const offsetX = canvas.width / 2;
+    const offsetY = canvas.height / 2;
+
+    blocks.forEach(block => {
+        const iso = isoProject(block.gx, block.gy);
+        const screenX = iso.x + offsetX;
+        const screenYBase = iso.y + offsetY;
+
+        // Proximity logic
+        if (mouseX !== null && mouseY !== null) {
+            const dx = mouseX - screenX;
+            const dy = mouseY - screenYBase;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < influenceRadius) {
+                const t = Math.pow(1 - dist / influenceRadius, 3);
+                block.targetLift = t * maxLift;
+            } else {
+                block.targetLift = 0;
+            }
+        } else {
+            block.targetLift = 0;
+        }
+
+        // Smooth interpolation
+        block.currentLift += (block.targetLift - block.currentLift) * liftEase;
+        if (Math.abs(block.currentLift) < 0.01) block.currentLift = 0;
+
+        const drawY = screenYBase - block.currentLift;
+
+        drawBlock(screenX, drawY, block.currentLift, screenYBase);
+    });
+}
+
+// -------------------------------
+// ANIMATION LOOP
+// -------------------------------
+function animate() {
+    drawScene();
+    requestAnimationFrame(animate);
+}
+
+// -------------------------------
+// EVENTS
+// -------------------------------
+hero.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+});
+
+hero.addEventListener('mouseleave', () => {
+    mouseX = null;
+    mouseY = null;
+});
+
+window.addEventListener('resize', () => {
+    resizeCanvas();
+});
+
+// -------------------------------
+// INIT
+// -------------------------------
+resizeCanvas();
+initGrid();
+animate();
