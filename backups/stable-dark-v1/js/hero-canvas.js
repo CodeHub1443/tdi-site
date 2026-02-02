@@ -53,9 +53,6 @@ function initGrid() {
             });
         }
     }
-
-    // Sort by depth (farthest first) for painter's algorithm
-    blocks.sort((a, b) => (a.gx + a.gy) - (b.gx + b.gy));
 }
 
 // -------------------------------
@@ -73,14 +70,14 @@ function isoProject(x, y) {
 // -------------------------------
 function drawBlock(x, y, lift, baseIsoY) {
     // Depth attenuation (background illusion)
-    const depthFadeStart = canvas.height * 0.05;
-    const depthFadeEnd = canvas.height * 0.45;
+    const depthFadeStart = canvas.height * 0.15;
+    const depthFadeEnd = canvas.height * 0.55;
 
     let depthAlpha = 1;
     if (y < depthFadeEnd) {
         depthAlpha = Math.min(
             1,
-            Math.max(0.6, (y - depthFadeStart) / (depthFadeEnd - depthFadeStart))
+            Math.max(0, (y - depthFadeStart) / (depthFadeEnd - depthFadeStart))
         );
     }
 
@@ -89,9 +86,9 @@ function drawBlock(x, y, lift, baseIsoY) {
     // Under-glow
     if (lift > 0.5) {
         ctx.save();
-        ctx.shadowColor = 'rgba(60, 110, 255, 0.4)';
+        ctx.shadowColor = 'rgba(30, 79, 255, 0.18)';
         ctx.shadowBlur = lift * 3;
-        ctx.fillStyle = 'rgba(60, 110, 255, 0.4)';
+        ctx.fillStyle = 'rgba(30, 79, 255, 0.18)';
 
         const glowScale = 1.1;
         const gW = (tileWidth / 2) * glowScale;
@@ -109,9 +106,9 @@ function drawBlock(x, y, lift, baseIsoY) {
     }
 
     // Colors (subtle contrast)
-    const colorTop = '#1E2C3E';
-    const colorLeft = '#15202E';
-    const colorRight = '#0F1823';
+    const colorTop = '#0E1A2A';
+    const colorLeft = '#0A1422';
+    const colorRight = '#070F1A';
 
     // Top face
     ctx.fillStyle = colorTop;
