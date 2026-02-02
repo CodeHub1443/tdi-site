@@ -17,6 +17,27 @@
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
+
+    /* ======================================================
+   Elevation System
+   ------------------------------------------------------
+   Level 1  — Subtle surfaces (cards, quiet panels)
+   Level 2  — Primary panels (media, focus blocks)
+   Accent   — Atmospheric blue glow (hero-adjacent only)
+
+   Rules:
+   - Accent glow is always layered on top of neutral shadow
+   - Never use accent glow alone
+   - Avoid accent glow on small UI elements
+    ====================================================== */
+
+
+    /* Elevation system — neutral depth */
+    --elev-1-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    --elev-2-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+
+    /* Elevation system — accent (derived from hero blue) */
+    --elev-accent-glow: 0 30px 80px rgba(30, 79, 255, 0.14);
 }
 
 body {

@@ -75,7 +75,10 @@
     background: rgba(255, 255, 255, 0.035);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    box-shadow:
+        var(--elev-2-shadow),
+        var(--elev-accent-glow);
+
 }
 
 .newgen-ai-media::before,
