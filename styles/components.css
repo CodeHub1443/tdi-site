@@ -75,10 +75,45 @@
     background: rgba(255, 255, 255, 0.035);
     border-radius: 14px;
     overflow: hidden;
+    /* elevation system */
     box-shadow:
         var(--elev-2-shadow),
         var(--elev-accent-glow);
+    /* critical for clean layering */
+    isolation: isolate;
 
+}
+
+.staff-aug-media-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.staff-aug-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* inner material layer (video/image lives here) */
+.newgen-ai-media-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* embedded video behaves like material */
+.newgen-ai-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .newgen-ai-media::before,
