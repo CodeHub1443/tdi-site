@@ -9,32 +9,40 @@
     margin: 0 auto;
 }
 
-/* New-Gen AI Section Styling */
+/* Feature Sections (Shared) */
 .newgen-ai {
     background: linear-gradient(135deg, rgba(30, 79, 255, 0.03) 0%, transparent 100%);
 }
 
-.newgen-ai-inner {
+.staff-aug {
+    background: linear-gradient(135deg, transparent 0%, rgba(30, 79, 255, 0.03) 100%);
+}
+
+.newgen-ai-inner,
+.staff-aug-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: center;
 }
 
-.newgen-ai-text h2 {
+.newgen-ai-text h2,
+.staff-aug-text h2 {
     font-family: var(--font-heading);
     font-size: clamp(32px, 4vw, 48px);
     margin-bottom: 20px;
 }
 
-.newgen-ai-text .subtitle {
+.newgen-ai-text .subtitle,
+.staff-aug-text .subtitle {
     font-size: 20px;
     color: var(--text-muted);
     margin-bottom: 32px;
     line-height: 1.4;
 }
 
-.newgen-ai-text p {
+.newgen-ai-text p,
+.staff-aug-text p {
     color: var(--text-muted);
     margin-bottom: 32px;
     line-height: 1.7;
@@ -60,16 +68,56 @@
     color: var(--accent-glow);
 }
 
-.newgen-ai-media {
+.newgen-ai-media,
+.staff-aug-media {
     aspect-ratio: 16 / 10;
     position: relative;
     background: rgba(255, 255, 255, 0.035);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    /* elevation system */
+    box-shadow:
+        var(--elev-2-shadow),
+        var(--elev-accent-glow);
+    /* critical for clean layering */
+    isolation: isolate;
+
 }
 
-.newgen-ai-media::before {
+.staff-aug-media-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.staff-aug-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* inner material layer (video/image lives here) */
+.newgen-ai-media-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* embedded video behaves like material */
+.newgen-ai-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.newgen-ai-media::before,
+.staff-aug-media::before {
     content: "";
     position: absolute;
     inset: 0;
