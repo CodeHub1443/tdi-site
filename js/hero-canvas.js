@@ -72,19 +72,8 @@ function isoProject(x, y) {
 // DRAW BLOCK (WITH UNDER-GLOW)
 // -------------------------------
 function drawBlock(x, y, lift, baseIsoY) {
-    // Depth attenuation (background illusion)
-    const depthFadeStart = canvas.height * 0.05;
-    const depthFadeEnd = canvas.height * 0.45;
-
-    let depthAlpha = 1;
-    if (y < depthFadeEnd) {
-        depthAlpha = Math.min(
-            1,
-            Math.max(0.6, (y - depthFadeStart) / (depthFadeEnd - depthFadeStart))
-        );
-    }
-
-    ctx.globalAlpha = depthAlpha;
+    // Depth attenuation (Disabled for uniformity)
+    ctx.globalAlpha = 1;
 
     // Under-glow
     if (lift > 0.5) {
