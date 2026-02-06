@@ -150,3 +150,139 @@ gsap.utils.toArray('.section.reveal').forEach((section) => {
         }
     );
 });
+
+// NAVBAR SCROLL EFFECT
+window.addEventListener('scroll', () => {
+
+    console.log('scrollY:', window.scrollY);
+    const header = document.getElementById('site-header');
+
+    if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+// ======================================================
+// NAVIGATION DROPDOWN INTERACTIONS
+// ======================================================
+
+// Desktop Dropdown Interactions
+const navItems = document.querySelectorAll('.nav-item.has-dropdown');
+
+navItems.forEach(item => {
+    const navLink = item.querySelector('.nav-link');
+
+    // Toggle dropdown on click (for mobile compatibility)
+    navLink.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+
+            // Toggle active state
+            const isActive = item.classList.contains('active');
+
+            // Close all other dropdowns
+            navItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Toggle current dropdown
+            if (isActive) {
+                item.classList.remove('active');
+                navLink.setAttribute('aria-expanded', 'false');
+            } else {
+                item.classList.add('active');
+                navLink.setAttribute('aria-expanded', 'true');
+            }
+        }
+    });
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item.has-dropdown')) {
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            item.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+        });
+    }
+});
+
+// Close dropdowns on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            item.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+        });
+
+        // Also close mobile menu if open
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks && navLinks.classList.contains('mobile-open')) {
+            navLinks.classList.remove('mobile-open');
+            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+    }
+});
+
+// ======================================================
+// MOBILE MENU TOGGLE
+// ======================================================
+
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+if (mobileMenuToggle && navLinks) {
+    mobileMenuToggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.contains('mobile-open');
+
+        if (isOpen) {
+            // Close menu
+            navLinks.classList.remove('mobile-open');
+            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = ''; // Re-enable scrolling
+        } else {
+            // Open menu
+            navLinks.classList.add('mobile-open');
+            mobileMenuToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+    });
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+        if (!e.target.closest('.nav-links') &&
+            !e.target.closest('.mobile-menu-toggle')) {
+            if (navLinks && navLinks.classList.contains('mobile-open')) {
+                navLinks.classList.remove('mobile-open');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        }
+    }
+});
+
+// Handle window resize - close mobile menu if resized to desktop
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        if (navLinks && navLinks.classList.contains('mobile-open')) {
+            navLinks.classList.remove('mobile-open');
+            mobileMenuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+
+        // Remove active states from nav items
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            item.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+        });
+    }
+});
