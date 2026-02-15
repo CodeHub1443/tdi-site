@@ -1,0 +1,71 @@
+#site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+
+    /* Initial state - minimal, more transparent */
+    padding: 20px 80px;
+    backdrop-filter: blur(6px);
+    background: rgba(5, 11, 20, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    box-shadow: none;
+
+    /* Smooth transitions for all properties */
+    transition:
+        padding 0.3s ease,
+        backdrop-filter 0.3s ease,
+        background 0.3s ease,
+        border-bottom 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* Scrolled state - expanded with enhanced blur */
+#site-header.scrolled {
+    padding: 28px 80px;
+    backdrop-filter: blur(12px);
+    background: rgba(5, 11, 20, 0.75);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.site-logo {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+main {
+    padding-top: 96px;
+    /* match header height */
+}
